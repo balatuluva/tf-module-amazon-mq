@@ -44,3 +44,11 @@ resource "aws_instance" "rabbitmq" {
     rabbitmq_appuser_password =data.aws_ssm_parameter.rabbitmq_appuser_password.value
   }))
 }
+
+resource "aws_route53_record" "main" {
+  name    = "rabbitmq-${var.env}"
+  type    = "A"
+  zone_id = var.domain_id
+  ttl = 30
+  records = [aws_instance.rabbitmq.private_ip]
+}
